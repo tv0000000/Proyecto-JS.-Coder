@@ -49,6 +49,11 @@
     border: 1px solid black
 }
 
+.botonResySum {
+    width: 30px;
+    display: flex
+}
+
 /* TOTAL COMPRA */
 .compra {
     font-family: 'Ubuntu', sans-serif;
