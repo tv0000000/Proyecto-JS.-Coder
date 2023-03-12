@@ -168,9 +168,9 @@ finalizar.addEventListener("click", () => {
     //   mensajeForm.innerHTML = '';
     // }, 3000);
 
-  // } else {
-  //   mensajeForm.innerHTML = `<p>No hay elementos en el carrito</p>`;
-  //   carritoMostrarDom.appendChild(mensajeForm);
+  } else {
+    mensajeForm.innerHTML = `<p>No hay elementos en el carrito</p>`;
+    carritoMostrarDom.appendChild(mensajeForm);
   
     // setTimeout(() => {
     //   mensajeForm.innerHTML = '';
