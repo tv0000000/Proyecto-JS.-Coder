@@ -41,7 +41,7 @@ navBar.innerHTML = `
 nav.appendChild(navBar);
 
 // FUNCION PARA VER PRODUCTOS Y BOTON QUE INVOCA FUNCION PARA AGREGAR PRODUCTOS.
-const mostramosHamburguesas = document.getElementById("mostrarProductos"); 
+const mostramosHamburguesas = document.getElementById("mostrarProductos");
 const verProductos = () => {
   arrayProductos.forEach(producto => {
     const cardBs = document.createElement("div");
@@ -80,6 +80,8 @@ const agregar = (id) => {
     carrito.push(producto);
     costo();
   }
+
+  // localStorage SETITEM
   localStorage.setItem("carrito", JSON.stringify(carrito))
 }
 
@@ -127,7 +129,6 @@ const vemosCarrito = () => {
     })
 
     // EVENTO PARA SUMAR O RESTAR UN PRODUCTO
-
     const botonSuma = document.getElementById(`botonSuma${producto.id}`);
     botonSuma.addEventListener("click", () => {
       sumaProducto(producto.id);
@@ -137,32 +138,8 @@ const vemosCarrito = () => {
     botonResta.addEventListener("click", () => {
       restaProducto(producto.id);
     })
-
-
   })
 }
-
-
-
-// FUNCION PARA ELIMINAR UN PRODUCTO Y FUNCION PARA AGREGAR UN PRODUCTO 
-const sumaProducto = (id) => {
-  const sumaCarrito = carrito.find(producto => producto.id === id);
-  if (sumaCarrito) {
-    sumaCarrito.cantidad++;
-    costo()
- }
-}
-
-const restaProducto = (id) => {
-  const restaCarrito = carrito.find(producto => producto.id === id);
-  if (restaCarrito) {
-  //const indice = carrito.indexOf(restaCarrito);
-  //carrito.splice(indice, 1);
-  restaCarrito.cantidad--
-  costo()
- }
-}
-
 
 // FUNCION PARA ELIMINAR PRODUCTO DEL CARRITO
 const eliminamosProducto = (id) => {
@@ -172,6 +149,7 @@ const eliminamosProducto = (id) => {
   vemosCarrito();
   costo()
 
+    // localStorage SETITEM
   localStorage.setItem("carrito", JSON.stringify(carrito))
 }
 
@@ -187,6 +165,7 @@ const eliminamosTodo = () => {
   vemosCarrito();
   costo();
 
+    // localStorage 
   localStorage.clear();
 }
 
@@ -196,6 +175,34 @@ const costo = () => {
   let total = carrito.reduce((acumulador, producto) => acumulador + (producto.cantidad * producto.precio), 0);
   console.log(total);
   costoCompra.innerHTML = `<p class="compra">Total de la compra: $${total}</p>`;
+
+  // localStorage SETITEM
+  localStorage.setItem("carrito", JSON.stringify(carrito)) //ESTE LO AGREGUE YO NO EL PROFE.
+}
+
+// FUNCIONES PARA ELIMINAR UN PRODUCTO Y FUNCION PARA AGREGAR UN PRODUCTO 
+const sumaProducto = (id) => {
+  const sumaCarrito = carrito.find(producto => producto.id === id);
+  if (sumaCarrito) {
+    sumaCarrito.cantidad++;
+    costo();
+
+    // LOCAL STORAGE SETITEM
+    localStorage.setItem("carrito", JSON.stringify(carrito))
+  }
+}
+
+const restaProducto = (id) => {
+  const restaCarrito = carrito.find(producto => producto.id === id);
+  if (restaCarrito) {
+    //const indice = carrito.indexOf(restaCarrito);
+    //carrito.splice(indice, 1);
+    restaCarrito.cantidad--;
+    costo();
+    
+        // LOCAL STORAGE SETITEM
+    localStorage.setItem("carrito", JSON.stringify(carrito))
+  }
 }
 
 // FINALIZAR COMPRA
@@ -218,12 +225,32 @@ finalizar.addEventListener("click", () => {
   } else {
     mensajeForm.innerHTML = `<p>No hay elementos en el carrito</p>`;
     carritoMostrarDom.appendChild(mensajeForm);
-  
+
     setTimeout(() => {
       mensajeForm.innerHTML = '';
     }, 3000);
   }
 })
+
+// BOTON MODO /*Recordar boton creado en el NAV.*/
+const botonModo = document.getElementById("botonModo");
+
+botonModo.addEventListener("click", () => {
+  document.body.classList.toggle("oscuro");
+  if (document.body.classList.contains("oscuro")) {
+    localStorage.setItem("botonModo", "oscuro");
+  } else {
+    localStorage.setItem("botonModo", "claro")
+  }
+})
+
+const modoClaroOscuro = localStorage.getItem("botonModo")
+
+if (modoClaroOscuro === "oscuro") {
+  document.body.classList.add("oscuro")
+} else {
+  document.body.classList.remove("oscuro");
+}
 
 
 
@@ -282,7 +309,7 @@ finalizar.addEventListener("click", () => {
 //         mensajeForm.innerHTML = '';
 //       }, 3000);
 //     } else {
-//       mensajeForm.innerHTML = `<h3>Muchas gracias su pedido está en camino</h3>` 
+//       mensajeForm.innerHTML = `<h3>Muchas gracias su pedido está en camino</h3>`
 //       setTimeout(() => {
 //         mensajeForm.innerHTML = '';
 //       }, 3000);
@@ -290,25 +317,7 @@ finalizar.addEventListener("click", () => {
 //   });
 // });
 
-// BOTON MODO /*Recordar boton creado en el NAV.*/
-const botonModo = document.getElementById("botonModo");
 
-botonModo.addEventListener("click", () => {
-  document.body.classList.toggle("oscuro");
-  if (document.body.classList.contains("oscuro")) {
-    localStorage.setItem("botonModo", "oscuro");
-  } else {
-    localStorage.setItem("botonModo", "claro")
-  }
-})
-
-const modoClaroOscuro = localStorage.getItem("botonModo")
-
-if (modoClaroOscuro === "oscuro") {
-  document.body.classList.add("oscuro")
-} else {
-  document.body.classList.remove("oscuro");
-}
 
 
 
