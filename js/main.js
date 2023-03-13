@@ -1,23 +1,3 @@
-// CONSTANTES
-// const nav = document.getElementById("navBar");
-// const mostramosHamburguesas = document.getElementById("mostrarProductos");
-// const carritoMostrarDom = document.getElementById("mostrarCarrito");
-// const verCarrito = document.getElementById("botonVerCarrito"); /*Recordar boton creado en el NAV.*/
-// const titulo = document.getElementById("tituloCarrito");
-// const vaciar = document.getElementById("botonVaciarCarrito");
-// const costoCompra = document.getElementById("costo");
-// const finalizar = document.getElementById("botonFinalizarCompra"); /*Recordar boton creado en el NAV.*/
-
-// ARRAYS
-const arrayProductos = [hamburguesa1, hamburguesa2, hamburguesa3, hamburguesa4, hamburguesa5, hamburguesa6, hamburguesa7, hamburguesa8];
-
-// ARRAY DE CARRITO VACIO
-let carrito = [];
-
-if (localStorage.getItem("carrito")) {
-  carrito = JSON.parse(localStorage.getItem("carrito"))
-}
-
 // CREAMOS NAV
 const nav = document.getElementById("navBar");
 const navBar = document.createElement("div");
@@ -39,6 +19,17 @@ navBar.innerHTML = `
       </ul>
       `
 nav.appendChild(navBar);
+
+
+// ARRAYS
+const arrayProductos = [hamburguesa1, hamburguesa2, hamburguesa3, hamburguesa4, hamburguesa5, hamburguesa6, hamburguesa7, hamburguesa8];
+
+// ARRAY DE CARRITO VACIO
+let carrito = [];
+
+if (localStorage.getItem("carrito")) {
+  carrito = JSON.parse(localStorage.getItem("carrito"))
+}
 
 // FUNCION PARA VER PRODUCTOS Y BOTON QUE INVOCA FUNCION PARA AGREGAR PRODUCTOS.
 const mostramosHamburguesas = document.getElementById("mostrarProductos");
@@ -71,13 +62,16 @@ verProductos();
 
 // FUNCION PARA AGREGAR UN PRODUCTO AL CARRITO. SE INVOCA DENTRO DE FUNCION DONDE CREAMOS BOTON Y PRODUCTOS
 const agregar = (id) => {
+  // console.log(id);
   const enCarrito = carrito.find(producto => producto.id === id);
   if (enCarrito) {
     enCarrito.cantidad++;
+    // console.log(enCarrito);
     costo();
   } else {
     const producto = arrayProductos.find(producto => producto.id === id);
     carrito.push(producto);
+    // console.log(producto);
     costo();
   }
 
@@ -108,17 +102,16 @@ const vemosCarrito = () => {
     cardBs.classList.add("col-xl-3", "col-md-6");
     cardBs.innerHTML =
       ` 
-          <div class="card cardProductos">
+          <div class="card">
           <img src= ${producto.img} alt= ${producto.nombre}>
           <div class="card-body">
           <h2 class="card-title">${producto.nombre}</h2>
           <p> Cantidad: ${producto.cantidad} </p>
-          <button class="btn-dark botonResSum" id ="botonSuma${producto.id}">+</button>
-          </div> 
-          <button class="btn-dark botonResySum" id ="botonResta${producto.id}">-</button>
-          </div>
           <p class="card-text">$ ${producto.precio}</p></div>
-          <button class="btn btn-dark" id ="botonEliminar${producto.id}">eliminar del carrito</button>` //AGREGUE BOTON PARA SUMAR Y RESTAR; 
+          <button class="btn btn-dark botonSum" id ="botonSuma${producto.id}">+ Agregar una ${producto.nombre} al carrito</button> 
+          <button class="btn btn-dark botonRes" id ="botonResta${producto.id}">- Eliminar una ${producto.nombre} del carrito</button>
+          <button class="btn btn-dark" id ="botonEliminar${producto.id}">Vaciar total de ${producto.nombre} del carrito</button>
+          </div>`
 
     carritoMostrarDom.appendChild(cardBs)
 
@@ -141,6 +134,31 @@ const vemosCarrito = () => {
   })
 }
 
+// FUNCIONES PARA ELIMINAR UN PRODUCTO Y FUNCION PARA AGREGAR UN PRODUCTO 
+const sumaProducto = (id) => {
+  const sumaCarrito = carrito.find(producto => producto.id === id);
+  if (sumaCarrito) {
+    sumaCarrito.cantidad++;
+    vemosCarrito();
+    costo();
+
+    // LOCAL STORAGE SETITEM
+    localStorage.setItem("carrito", JSON.stringify(carrito))
+  }
+}
+
+const restaProducto = (id) => {
+  const restaCarrito = carrito.find(producto => producto.id === id);
+  if (restaCarrito) {
+    restaCarrito.cantidad--;
+    vemosCarrito();
+    costo();
+
+    // LOCAL STORAGE SETITEM
+    localStorage.setItem("carrito", JSON.stringify(carrito))
+  }
+}
+
 // FUNCION PARA ELIMINAR PRODUCTO DEL CARRITO
 const eliminamosProducto = (id) => {
   const productoEliminado = carrito.find(producto => producto.id === id);
@@ -149,7 +167,7 @@ const eliminamosProducto = (id) => {
   vemosCarrito();
   costo()
 
-    // localStorage SETITEM
+  // localStorage SETITEM
   localStorage.setItem("carrito", JSON.stringify(carrito))
 }
 
@@ -165,9 +183,10 @@ const eliminamosTodo = () => {
   vemosCarrito();
   costo();
 
-    // localStorage 
+  // localStorage 
   localStorage.clear();
 }
+
 
 // FUNCION PARA VER EL COSTO DE LA COMPRA - LA INVOCAMOS CUANDO VACIAMOS O AGREGAMOS PRODUCTOS AL CARRITO. 
 const costoCompra = document.getElementById("costo");
@@ -180,34 +199,8 @@ const costo = () => {
   localStorage.setItem("carrito", JSON.stringify(carrito)) //ESTE LO AGREGUE YO NO EL PROFE.
 }
 
-// FUNCIONES PARA ELIMINAR UN PRODUCTO Y FUNCION PARA AGREGAR UN PRODUCTO 
-const sumaProducto = (id) => {
-  const sumaCarrito = carrito.find(producto => producto.id === id);
-  if (sumaCarrito) {
-    sumaCarrito.cantidad++;
-    costo();
-
-    // LOCAL STORAGE SETITEM
-    localStorage.setItem("carrito", JSON.stringify(carrito))
-  }
-}
-
-const restaProducto = (id) => {
-  const restaCarrito = carrito.find(producto => producto.id === id);
-  if (restaCarrito) {
-    //const indice = carrito.indexOf(restaCarrito);
-    //carrito.splice(indice, 1);
-    restaCarrito.cantidad--;
-    costo();
-    
-        // LOCAL STORAGE SETITEM
-    localStorage.setItem("carrito", JSON.stringify(carrito))
-  }
-}
-
 // FINALIZAR COMPRA
-
-// EVENTO PARA FUNALIZAR COMPRA Y MOSTRAR MENSAJE
+// EVENTO PARA FINALIZAR COMPRA Y MOSTRAR MENSAJE
 const finalizar = document.getElementById("botonFinalizarCompra"); /*Recordar boton creado en el NAV.*/
 finalizar.addEventListener("click", () => {
   // MENSAJE FORM
@@ -218,17 +211,17 @@ finalizar.addEventListener("click", () => {
     mensajeForm.innerHTML = `<p>Muchas gracias su pedido está en camino</p>`;
     carritoMostrarDom.appendChild(mensajeForm);
 
-    setTimeout(() => {
-      mensajeForm.innerHTML = '';
-    }, 3000);
+    // setTimeout(() => {
+    //   mensajeForm.innerHTML = '';
+    // }, 3000);
 
   } else {
     mensajeForm.innerHTML = `<p>No hay elementos en el carrito</p>`;
     carritoMostrarDom.appendChild(mensajeForm);
 
-    setTimeout(() => {
-      mensajeForm.innerHTML = '';
-    }, 3000);
+    // setTimeout(() => {
+    //   mensajeForm.innerHTML = '';
+    // }, 3000);
   }
 })
 
@@ -254,68 +247,6 @@ if (modoClaroOscuro === "oscuro") {
 
 
 
-// NO USAR*****************************************************
-
-// FINALIZAR COMPRA
-// const finalizar = document.getElementById("botonFinalizarCompra"); /*Recordar boton creado en el NAV.*/
-
-// CONST PRUEBA MENSAJE FINAL
-// const mensajeFinal = document.getElementById("mensajeFinal")
-
-// finalizar.addEventListener("click", () => {
-//   vemosCarrito();
-//   const formFinalizar = document.createElement("div");
-//   formFinalizar.innerHTML = `<form class="mb-3 contenedorForm formFianlizar" id= "formEnviar">
-//       <label for="exampleInputEmail1" class="labelForm">Ingrese su nombre</label>
-//       <input id = "inputNombre" type="text" class="form-control textInput" id="exampleInputEmail1" aria-describedby="emailHelp">
-//       <label for="exampleInputEmail1" class="labelForm">Email</label>
-//       <input id = "inputMail" type="email" class="form-control textInput" id="exampleInputEmail1" aria-describedby="emailHelp">
-//       <label for="exampleInput" class="labelForm">Ingrese dirección para enviar pedido.</label>
-//       <input id = "inputDir" type="text" class="form-control textInput" id="exampleInputEmail1" aria-describedby="emailHelp">
-//       <p>El pago se realiza cuando el pedido se entrega</p>
-//       <button class="btn btn-warning">Enviar</button>
-//       <button id = "botonSalir" class="btn btn-warning">Salir</button>
-//     `;
-//   carritoMostrarDom.appendChild(formFinalizar);
-
-// FUNCION Y BOTON PARA SALIR
-// const botonSalir = document.getElementById("botonSalir");
-// console.log(botonSalir);
-// botonSalir.addEventListener("click", () => {
-//   eliminamosTodo();
-// })
-
-//  BOTON ENVIAR
-// const inputNombre = document.getElementById("inputNombre");
-// console.log(inputNombre);
-// const inputMail = document.getElementById("inputMail");
-// console.log(inputMail);
-// const inputDir = document.getElementById("inputDir");
-// console.log(inputDir);
-
-// MENSAJE FORM
-// const mensajeForm = document.getElementById("mensajeFinalizar")
-// console.log(mensajeForm);
-// carritoMostrarDom.appendChild(mensajeForm)
-
-
-// const botonEnviar = document.getElementById("formEnviar");
-// console.log(botonEnviar);
-//   botonEnviar.addEventListener("submit", (e) => {
-//     e.preventDefault()
-//     if (inputNombre.value == "" || inputMail.value == "" || inputDir.value == "") {
-//       mensajeForm.innerHTML = `<h3>No ingreso datos para envio</h3>`
-//       setTimeout(() => {
-//         mensajeForm.innerHTML = '';
-//       }, 3000);
-//     } else {
-//       mensajeForm.innerHTML = `<h3>Muchas gracias su pedido está en camino</h3>`
-//       setTimeout(() => {
-//         mensajeForm.innerHTML = '';
-//       }, 3000);
-//     }
-//   });
-// });
 
 
 
